@@ -1,7 +1,6 @@
 local _ = require("gettext")
-
 return {
-	name = "KOPlanner",
-	fullname = _("KOPlanner"),
-	description = _([[KOPlanner calendar and tasks plugin]]),
+    name = "koplanner",
+    fullname = _("koplanner"),
+    description = _([[the test build of koplanner]]),
 }
