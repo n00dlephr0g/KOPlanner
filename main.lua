@@ -5,48 +5,106 @@ This is a debug plugin to test Plugin functionality.
 --]]--
 
 
-
+-- essentials
 local Dispatcher = require("dispatcher")  -- luacheck:ignore
-
--- widgets
-local InfoMessage = require("ui/widget/infomessage")
-local MultiInput = require("ui/widget/multiinputdialogue")
 local UIManager = require("ui/uimanager")
 local WidgetContainer = require("ui/widget/container/widgetcontainer")
 local _ = require("gettext")
 
+-- widgets
+local InfoMessage = require("ui/widget/infomessage")
+local MultiInput = require("ui/widget/multiinputdialogue")
 
--- works
+
 local koplanner = WidgetContainer:extend{
     name = "koplanner",
     is_doc_only = false,
 }
 
--- works
 function koplanner:onDispatcherRegisterActions()
     Dispatcher:registerAction("koplanner_ui_show", {category="KOPlanner", event="KoplannerUiShow", title=_("Show KOPlanner UI"), general=true,})
 end
 
--- works
 function koplanner:init()
     self:onDispatcherRegisterActions()
     self.ui.menu:registerToMainMenu(self)
+    self.settings = {
+        server = {
+            url = "",
+            username = "",
+            password = "",
+        },
+    }
 end
 
-
+-- menu
 function koplanner:addToMainMenu(menu_items)
     menu_items.koplanner = {
         text = _("KOPlanner"),
-        -- in which menu this should be appended
         sorting_hint = "tools",
-        -- a callback when tapping
         sub_item_table = {
             {
                 text = _("Server Settings"),
                 keep_menu_open = true,
-                
                 callback = function()
-                   UIManager:show() 
+                    local dialogue = MultiInput:new{
+                        title = _("Server Settings"),
+                        fields = {
+                            {
+                                description = _("CalDAV Server URL"),
+                                -- input_type = nil, -- default for text
+                                text = self.settings.server.url
+                                hint = _("URL"),
+                            },
+                            {
+                                description = _("Username")
+                                text = self.settings.server.username,
+                                hint = _("Username"),
+                            },
+                            {
+                                description = _("Password"),  
+                                text_type = "password",
+                                hint = _("Password")
+                            },
+                        },
+                        buttons = {
+                            {
+                                {
+                                    text = _("Cancel"),
+                                    id = "close",
+                                    callback = function()
+                                        UIManager:close(sample_input)
+                                    end
+                                },
+                                {
+                                    text = _("Info"),
+                                    callback = function()
+                                        -- do something
+                                    end
+                                },
+                                {
+                                    text = _("Use settings"),
+                                    callback = function(touchmenu_instance)
+                                        local fields = sample_input:getFields()
+                                        -- check for user input
+                                        if fields[1] ~= "" and fields[2] ~= ""
+                                            and fields[3] ~= 0 then
+                                            -- insert code here
+                                            UIManager:close(sample_input)
+                                            -- If we have a touch menu: Update menu entries,
+                                            -- when called from a menu
+                                            if touchmenu_instance then
+                                                touchmenu_instance:updateItems()
+                                            end
+                                        else
+                                            -- not all fields where entered
+                                        end
+                                    end
+                                },
+                            },
+                        },
+                    }
+                    UIManager:show(dialogue)
                 end
             },
             {
@@ -70,6 +128,8 @@ function koplanner:addToMainMenu(menu_items)
         }
     }
 end
+
+
 
 function koplanner:onDoStuff()
     local popup = InfoMessage:new{
