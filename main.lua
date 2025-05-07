@@ -44,27 +44,28 @@ function koplanner:addToMainMenu(menu_items)
         sorting_hint = "tools",
         sub_item_table = {
             {
-                text = _("Server Settings"),
+                text = _("Server Settings (TESTING)"),
                 keep_menu_open = true,
                 callback = function()
-                    local dialogue = MultiInput:new{
+                    local dialogue
+                    dialogue = MultiInput:new{
                         title = _("Server Settings"),
                         fields = {
                             {
                                 description = _("CalDAV Server URL"),
                                 -- input_type = nil, -- default for text
-                                text = self.settings.server.url
+                                text = self.settings.server.url,
                                 hint = _("URL"),
                             },
                             {
-                                description = _("Username")
+                                description = _("Username"),
                                 text = self.settings.server.username,
                                 hint = _("Username"),
                             },
                             {
-                                description = _("Password"),  
+                                description = _("Password"),
                                 text_type = "password",
-                                hint = _("Password")
+                                hint = _("Password"),
                             },
                         },
                         buttons = {
@@ -73,29 +74,19 @@ function koplanner:addToMainMenu(menu_items)
                                     text = _("Cancel"),
                                     id = "close",
                                     callback = function()
-                                        UIManager:close(sample_input)
+                                        UIManager:close(dialogue)
                                     end
                                 },
                                 {
-                                    text = _("Info"),
+                                    text = _("Apply"),
                                     callback = function()
-                                        -- do something
-                                    end
-                                },
-                                {
-                                    text = _("Use settings"),
-                                    callback = function(touchmenu_instance)
-                                        local fields = sample_input:getFields()
+                                        local fields = dialogue:getFields()
                                         -- check for user input
-                                        if fields[1] ~= "" and fields[2] ~= ""
-                                            and fields[3] ~= 0 then
+                                        if fields[1] ~= "" and fields[2] ~= "" and fields[3] ~= "" then
                                             -- insert code here
-                                            UIManager:close(sample_input)
+                                            UIManager:close(dialogue)
                                             -- If we have a touch menu: Update menu entries,
                                             -- when called from a menu
-                                            if touchmenu_instance then
-                                                touchmenu_instance:updateItems()
-                                            end
                                         else
                                             -- not all fields where entered
                                         end
