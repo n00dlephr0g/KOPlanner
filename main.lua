@@ -1,7 +1,7 @@
 --[[--
 This is a debug plugin to test Plugin functionality.
 
-@module koplugin.HelloWorld
+@module koplugin.KoPlanner
 --]]--
 
 
@@ -16,17 +16,18 @@ local InfoMessage = require("ui/widget/infomessage")
 local MultiInput = require("ui/widget/multiinputdialogue")
 
 
-local koplanner = WidgetContainer:extend{
+local KoPlanner = WidgetContainer:extend{
     name = "koplanner",
+    fullname = _("KoPlanner"),
     is_doc_only = false,
 }
-
-function koplanner:onDispatcherRegisterActions()
-    Dispatcher:registerAction("koplanner_ui_show", {category="KOPlanner", event="KoplannerUiShow", title=_("Show KOPlanner UI"), general=true,})
+--[[
+function KoPlanner:onDispatcherRegisterActions()
+    Dispatcher:registerAction("KoPlanner_ui_show", {category="KOPlanner", event="KoPlannerUiShow", title=_("Show KoPlanner UI"), general=true,})
 end
-
-function koplanner:init()
-    self:onDispatcherRegisterActions()
+]]
+function KoPlanner:init()
+    -- self:onDispatcherRegisterActions()
     self.ui.menu:registerToMainMenu(self)
     self.settings = {
         server = {
@@ -38,11 +39,12 @@ function koplanner:init()
 end
 
 -- menu
-function koplanner:addToMainMenu(menu_items)
-    menu_items.koplanner = {
-        text = _("KOPlanner"),
+function KoPlanner:addToMainMenu(menu_items)
+    menu_items.KoPlanner = {
+        text = _("KoPlanner"),
         sorting_hint = "tools",
         sub_item_table = {
+            --[[
             {
                 text = _("Server Settings (TESTING)"),
                 keep_menu_open = true,
@@ -98,6 +100,7 @@ function koplanner:addToMainMenu(menu_items)
                     UIManager:show(dialogue)
                 end
             },
+            ]]
             {
                 text = _("Sync Settings (TODO)"),
                 keep_menu_open = true,
@@ -122,18 +125,18 @@ end
 
 
 
-function koplanner:onDoStuff()
+function KoPlanner:onDoStuff()
     local popup = InfoMessage:new{
         text = _("i did stuff!"),
     }
     UIManager:show(popup)
 end
 
-function koplanner:wirelessSettings()
+function KoPlanner:wirelessSettings()
     return {
         text = _("Network Configuration"),
 
     }
 end
 
-return koplanner
+return KoPlanner
